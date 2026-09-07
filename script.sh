@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# print title
 echo ' _______________________________________________________________'
 echo '|   ____  __  __    _    ____ _____     _____ ___ _     _____   |'
 echo '|  / ___||  \/  |  / \  |  _ \_   _|   |  ___|_ _| |   | ____|  |'
@@ -14,12 +15,22 @@ echo '|    \___/|_| \_\\____/_/   \_\_| \_|___|______|_____|_| \_\    |'
 echo '|_______________________________________________________________|'
 echo ''
 
+# specify folder
 read -p 'Enter the folder name: ' folder
 
 if [ ! -d $folder ] ; then
-        echo 'No such directory exists!'
-        exit
+    echo 'No such directory exists!'
+    exit 1
 fi
 
 path="$(pwd)/$folder"
 
+# make necessary directoies
+
+directoies=("Images" "Documents" "Videos" "Archives")
+
+for dir in ${directoies[@]} ; do
+	if [ ! -d "$path/$dir" ] ; then
+		mkdir "$path/$dir"
+	fi
+done
