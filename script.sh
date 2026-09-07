@@ -26,11 +26,21 @@ fi
 path="$(pwd)/$folder"
 
 # make necessary directoies
-
-directoies=("Images" "Documents" "Videos" "Archives")
+directoies=('Images' 'Documents' 'Videos' 'Archives')
 
 for dir in ${directoies[@]} ; do
 	if [ ! -d "$path/$dir" ] ; then
 		mkdir "$path/$dir"
+	fi
+done
+
+# move images
+img_prefixes=('.jpeg' '.jpg' '.png' '.gif' '.webp' '.svg' '.bmp' '.heic')
+
+for prfx in ${img_prefixes[@]} ; do
+	if [ ! "$(find . -maxdepth 1 -type f -name "*$prfx")" == '' ] ; then
+		for img in "$(pwd)/*$prfx" ; do
+			mv $img "$path/Images"
+		done
 	fi
 done
