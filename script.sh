@@ -13,3 +13,13 @@ echo '|   | |_| |  _ <| |_| |/ ___ \| |\  || | /  /__| |___|  _ <     |'
 echo '|    \___/|_| \_\\____/_/   \_\_| \_|___|______|_____|_| \_\    |'
 echo '|_______________________________________________________________|'
 echo ''
+
+read -p 'Enter the folder name: ' folder
+
+if [ ! -d $folder ] ; then
+        echo 'No such directory exists!'
+        exit
+fi
+
+path="$(pwd)/$folder"
+
