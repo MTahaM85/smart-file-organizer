@@ -44,3 +44,14 @@ for prfx in ${img_prefixes[@]} ; do
 		done
 	fi
 done
+
+# move videos
+img_prefixes=('.mp4' '.mkv' '.avi' '.mov' '.hevc')
+
+for prfx in ${img_prefixes[@]} ; do
+	if [ ! "$(find . -maxdepth 1 -type f -name "*$prfx")" == '' ] ; then
+		for vid in "$(pwd)/*$prfx" ; do
+			mv $vid "$path/Videos"
+		done
+	fi
+done
