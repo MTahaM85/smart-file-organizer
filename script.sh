@@ -18,15 +18,17 @@ echo ''
 # specify folder
 read -p 'Enter the folder name: ' folder
 
+echo ''
+
 if [ ! -d $folder ] ; then
-    echo 'No such directory exists!'
-    exit 1
+	echo 'No such directory exists!'
+	exit 1
 fi
 
 path="$(pwd)/$folder"
 
 # make necessary directoies
-directoies=('Images' 'Documents' 'Videos' 'Archives')
+directoies=('Images' 'Documents' 'Videos' 'Audios' 'Archives')
 
 for dir in ${directoies[@]} ; do
 	if [ ! -d "$path/$dir" ] ; then
@@ -34,24 +36,33 @@ for dir in ${directoies[@]} ; do
 	fi
 done
 
-# move images
-img_prefixes=('.jpeg' '.jpg' '.png' '.gif' '.webp' '.svg' '.bmp' '.heic')
+# declare an array to store file formats
+declare -A formats
 
-for prfx in ${img_prefixes[@]} ; do
-	if [ ! "$(find . -maxdepth 1 -type f -name "*$prfx")" == '' ] ; then
-		for img in "$(pwd)/*$prfx" ; do
-			mv $img "$path/Images"
-		done
-	fi
-done
+formats[Images]="jpeg jpg png gif webp svg bmp heic"
+formats[Documents]="pdf docx txt"
+formats[Videos]="mp4 mkv avi mov hevc"
+formats[Audios]="mp3 wav flac m4a"
+formats[Archives]="zip rar 7z tar"
 
-# move videos
-img_prefixes=('.mp4' '.mkv' '.avi' '.mov' '.hevc')
+# move each file to their directories
+for type in ${directoies[@]} ; do
+	for format in ${formats[$type]} ; do
+		if [ ! "$(find . -maxdepth 1 -type f -name "*.$format")" == '' ] ; then
+			for file in *".$format" ; do
+				dest_name=$file
 
-for prfx in ${img_prefixes[@]} ; do
-	if [ ! "$(find . -maxdepth 1 -type f -name "*$prfx")" == '' ] ; then
-		for vid in "$(pwd)/*$prfx" ; do
-			mv $vid "$path/Videos"
-		done
-	fi
+				while [ true ] ; do
+					if [ ! -f "$path/$type/$dest_name" ] ; then
+						mv -i $file "$path/$type/$dest_name"
+						break
+					else
+						echo "There is a file named $file in the $type folder."
+						read -p "Choose a different name and extention for the file: " dest_name
+						echo ''
+					fi
+				done
+			done
+		fi
+	done
 done
