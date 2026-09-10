@@ -45,6 +45,15 @@ formats[Videos]="mp4 mkv avi mov hevc"
 formats[Audios]="mp3 wav flac m4a"
 formats[Archives]="zip rar 7z tar"
 
+# declare an array to count how many of each format moved
+declare -A total
+
+total[Images]=0
+total[Documents]=0
+total[Videos]=0
+total[Audios]=0
+total[Archives]=0
+
 # move each file to their directories
 for type in ${directoies[@]} ; do
 	for format in ${formats[$type]} ; do
@@ -55,6 +64,7 @@ for type in ${directoies[@]} ; do
 				while [ true ] ; do
 					if [ ! -f "$path/$type/$dest_name" ] ; then
 						mv -i $file "$path/$type/$dest_name"
+						total[$type]=$((${total[$type]} + 1))
 						break
 					else
 						echo "There is a file named $file in the $type folder."
@@ -65,4 +75,11 @@ for type in ${directoies[@]} ; do
 			done
 		fi
 	done
+done
+
+# final report
+echo -e '\nFile transfer results\n'
+
+for type in ${directoies[@]} ; do
+	echo "$type: ${total[$type]}"
 done
